@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plantgirl Super Race</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="game-shell">
+    <header class="top-banner">
+      <h1>Plantgirl Super Race</h1>
+      <p>Steer, collect stars, and freeze racers with plant power!</p>
+    </header>
+
+    <section class="game-area">
+      <canvas id="gameCanvas" width="960" height="540" aria-label="Plantgirl Super Race game canvas"></canvas>
+
+      <div id="hud" class="hud hidden">
+        <div class="hud-chip">Level: <span id="hudLevel">1</span>/3</div>
+        <div class="hud-chip">Score: <span id="hudScore">0</span></div>
+        <div class="hud-chip">Stars: <span id="hudStars">0</span></div>
+        <div class="hud-chip">Prize Meter: <span id="hudMeter">0%</span></div>
+        <div class="hud-chip">Vine Freeze: <span id="hudPower">Ready</span></div>
+      </div>
+
+      <div id="overlay" class="overlay">
+        <div id="startPanel" class="panel">
+          <h2>Choose Plantgirl's Car</h2>
+          <p>All cars are awesome. Pick your favourite!</p>
+          <div id="carChoices" class="choice-grid"></div>
+          <p class="hint">Controls: ← and → to steer, ↑ for tiny boost, swipe on touch.</p>
+          <button id="startBtn" class="big-button">Start Race!</button>
+        </div>
+
+        <div id="celebrationPanel" class="panel hidden">
+          <h2>Level Complete!</h2>
+          <p id="celebrationScore" class="big-score">Score: 0</p>
+          <p>Thumbs up! Smiles! Confetti!</p>
+          <button id="toPrizeBtn" class="big-button">Pick a Prize</button>
+        </div>
+
+        <div id="prizePanel" class="panel hidden">
+          <h2>Pick 1 Prize</h2>
+          <p>Choose your reward for the next race.</p>
+          <div id="prizeChoices" class="choice-grid"></div>
+        </div>
+
+        <div id="endPanel" class="panel hidden">
+          <h2>Plantgirl Is A Super Racer!</h2>
+          <p id="finalScore" class="big-score">Final Score: 0</p>
+          <p id="finalBadges"></p>
+          <button id="restartBtn" class="big-button">Play Again</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./game.js" defer></script>
+</body>
+</html>

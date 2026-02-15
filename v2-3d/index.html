@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plantgirl Super Race - V2 3D</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./three.min.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="titlebar">
+      <h1>Plantgirl Super Race - V2 3D</h1>
+      <p>Shiny road. Big effects. Same joyful gameplay.</p>
+      <a href="../index.html">Back to V1</a>
+    </header>
+
+    <section class="stage">
+      <div id="sceneMount" class="scene-mount" aria-label="3D game view"></div>
+
+      <div id="hud" class="hud hidden">
+        <div class="chip">Level <span id="hudLevel">1</span>/3</div>
+        <div class="chip">Score <span id="hudScore">0</span></div>
+        <div class="chip">Stars <span id="hudStars">0</span></div>
+        <div class="chip">Prize Meter <span id="hudMeter">0%</span></div>
+        <div class="chip">Vine Freeze <span id="hudFreeze">Ready</span></div>
+      </div>
+
+      <div id="overlay" class="overlay">
+        <section id="startPanel" class="panel">
+          <h2>Choose Plantgirl's Car</h2>
+          <p>Every car is fast. Pick your hero ride.</p>
+          <div id="carChoices" class="choice-grid"></div>
+          <p class="hint">Controls: A/D or left/right arrows. W or up arrow for tiny boost. Swipe on touch.</p>
+          <button id="startBtn" class="button">Start 3D Race</button>
+        </section>
+
+        <section id="celebrationPanel" class="panel hidden">
+          <h2>Level Complete!</h2>
+          <p id="celebrationScore" class="big-text">Score: 0</p>
+          <p>Confetti! Smiles! Thumbs up!</p>
+          <button id="toPrizeBtn" class="button">Pick Prize</button>
+        </section>
+
+        <section id="prizePanel" class="panel hidden">
+          <h2>Pick 1 Prize</h2>
+          <div id="prizeChoices" class="choice-grid"></div>
+        </section>
+
+        <section id="endPanel" class="panel hidden">
+          <h2>Plantgirl Super Champion!</h2>
+          <p id="finalScore" class="big-text">Final Score: 0</p>
+          <p id="finalBadges"></p>
+          <button id="restartBtn" class="button">Race Again</button>
+        </section>
+      </div>
+      <div id="celebrationFx" class="celebration-fx hidden" aria-hidden="true"></div>
+    </section>
+  </main>
+
+  <script src="./game.js" defer></script>
+</body>
+</html>
