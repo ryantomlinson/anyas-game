@@ -2,61 +2,154 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plantgirl Super Race - V2 3D</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Plantgirl Super Race</title>
   <link rel="stylesheet" href="./styles.css">
   <script src="./three.min.js"></script>
 </head>
 <body>
-  <main class="shell">
-    <header class="titlebar">
-      <h1>Plantgirl Super Race - V2 3D</h1>
-      <p>Shiny road. Big effects. Same joyful gameplay.</p>
-      <a href="../index.html">Back to V1</a>
-    </header>
+  <!-- Loading screen (Phase 7.3) -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loading-inner">
+      <div class="loading-logo">🌿🏎️</div>
+      <h1 class="loading-title">Plantgirl Super Race</h1>
+      <div class="loading-spinner"></div>
+      <p class="loading-hint">Loading…</p>
+    </div>
+  </div>
 
-    <section class="stage">
-      <div id="sceneMount" class="scene-mount" aria-label="3D game view"></div>
+  <!-- Three.js renders directly into body (fullscreen) -->
+  <div id="sceneMount"></div>
 
-      <div id="hud" class="hud hidden">
-        <div class="chip">Level <span id="hudLevel">1</span>/3</div>
-        <div class="chip">Score <span id="hudScore">0</span></div>
-        <div class="chip">Stars <span id="hudStars">0</span></div>
-        <div class="chip">Prize Meter <span id="hudMeter">0%</span></div>
-        <div class="chip">Vine Freeze <span id="hudFreeze">Ready</span></div>
+  <!-- HUD: always-visible during racing -->
+  <div id="hud" class="hud hidden">
+    <div class="hud-left">
+      <div class="hud-block level-block">
+        <span class="hud-label">Level</span>
+        <span class="hud-value" id="hudLevel">1/3</span>
       </div>
-
-      <div id="overlay" class="overlay">
-        <section id="startPanel" class="panel">
-          <h2>Choose Plantgirl's Car</h2>
-          <p>Every car is fast. Pick your hero ride.</p>
-          <div id="carChoices" class="choice-grid"></div>
-          <p class="hint">Controls: A/D or left/right arrows. W or up arrow for tiny boost. Swipe on touch.</p>
-          <button id="startBtn" class="button">Start 3D Race</button>
-        </section>
-
-        <section id="celebrationPanel" class="panel hidden">
-          <h2>Level Complete!</h2>
-          <p id="celebrationScore" class="big-text">Score: 0</p>
-          <p>Confetti! Smiles! Thumbs up!</p>
-          <button id="toPrizeBtn" class="button">Pick Prize</button>
-        </section>
-
-        <section id="prizePanel" class="panel hidden">
-          <h2>Pick 1 Prize</h2>
-          <div id="prizeChoices" class="choice-grid"></div>
-        </section>
-
-        <section id="endPanel" class="panel hidden">
-          <h2>Plantgirl Super Champion!</h2>
-          <p id="finalScore" class="big-text">Final Score: 0</p>
-          <p id="finalBadges"></p>
-          <button id="restartBtn" class="button">Race Again</button>
-        </section>
+      <div class="hud-block score-block">
+        <span class="hud-label">Score</span>
+        <span class="hud-value" id="hudScore">0</span>
       </div>
-      <div id="celebrationFx" class="celebration-fx hidden" aria-hidden="true"></div>
+    </div>
+    <div class="hud-center">
+      <div class="hud-block stars-block">
+        <span class="hud-icon">⭐</span>
+        <span class="hud-value" id="hudStars">0</span>
+      </div>
+    </div>
+    <div class="hud-right">
+      <div class="hud-block meter-block">
+        <span class="hud-label">Prize</span>
+        <div class="meter-bar">
+          <div class="meter-fill" id="hudMeterFill"></div>
+        </div>
+      </div>
+      <div class="hud-block freeze-block" id="freezeBlock">
+        <span class="hud-label">Vine Freeze</span>
+        <span class="hud-value" id="hudFreeze">Ready</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress bar at bottom of screen -->
+  <div id="progressBar" class="progress-bar hidden">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Mobile touch controls: big invisible zones + visible power button -->
+  <div id="touchControls" class="touch-controls hidden">
+    <div class="touch-zone touch-left" id="touchLeft"></div>
+    <div class="touch-zone touch-right" id="touchRight"></div>
+    <button class="touch-power" id="touchPower">🌿 VINE FREEZE</button>
+  </div>
+
+  <!-- Overlay panels (menus) -->
+  <div id="overlay" class="overlay">
+    <section id="startPanel" class="panel">
+      <h1 class="panel-title">Plantgirl Super Race</h1>
+      <h2>Choose Your Car</h2>
+      <div id="carChoices" class="choice-grid"></div>
+      <p class="controls-hint">
+        <strong>Desktop:</strong> A/D or ←/→ to steer &bull; W/↑ boost &bull; Spacebar for Vine Freeze<br>
+        <strong>Mobile:</strong> Tap left/right side to steer &bull; Green button for Vine Freeze
+      </p>
+      <button id="startBtn" class="action-btn">START RACE</button>
     </section>
-  </main>
+
+    <section id="celebrationPanel" class="panel hidden">
+      <h2>Level Complete!</h2>
+      <p id="celebrationScore" class="big-score">Score: 0</p>
+      <p class="cheer-text">Confetti! Smiles! Thumbs up!</p>
+      <button id="toPrizeBtn" class="action-btn">Pick a Prize</button>
+    </section>
+
+    <section id="prizePanel" class="panel hidden">
+      <h2>Pick 1 Prize</h2>
+      <div id="prizeChoices" class="choice-grid"></div>
+    </section>
+
+    <section id="endPanel" class="panel hidden">
+      <h2>Plantgirl Super Champion!</h2>
+      <p id="finalScore" class="big-score">Final Score: 0</p>
+      <p id="finalBadges"></p>
+      <div class="end-buttons">
+        <button id="screenshotBtn" class="action-btn small-btn">📸 Screenshot</button>
+        <button id="shareBtn" class="action-btn small-btn">📤 Share</button>
+        <button id="garageBtn" class="action-btn small-btn">🚗 Garage</button>
+        <button id="trophyBtn" class="action-btn small-btn">🏆 Trophies</button>
+        <button id="restartBtn" class="action-btn">Race Again</button>
+      </div>
+    </section>
+
+    <section id="garagePanel" class="panel hidden">
+      <h2>🚗 Your Garage</h2>
+      <div id="garageCar" class="garage-car"></div>
+      <div id="garageStickers" class="garage-stickers"></div>
+      <p class="small-hint">Stickers you've collected appear on your car!</p>
+      <button id="garageBackBtn" class="action-btn small-btn">Back</button>
+    </section>
+
+    <section id="trophyPanel" class="panel hidden">
+      <h2>🏆 Trophy Shelf</h2>
+      <div id="trophyList" class="trophy-list"></div>
+      <p id="trophyEmpty" class="small-hint">Complete levels to earn trophies!</p>
+      <button id="trophyBackBtn" class="action-btn small-btn">Back</button>
+    </section>
+  </div>
+
+  <!-- Vine Freeze green screen flash (Phase 1.3) -->
+  <div id="freezeFlash" class="freeze-flash" aria-hidden="true"></div>
+
+  <!-- Countdown overlay (Phase 2.5) -->
+  <div id="countdownOverlay" class="countdown-overlay hidden" aria-hidden="true">
+    <span id="countdownText" class="countdown-text"></span>
+  </div>
+
+  <!-- Combo display (Phase 2.3) -->
+  <div id="comboDisplay" class="combo-display hidden" aria-hidden="true">
+    <span id="comboText" class="combo-text"></span>
+  </div>
+
+  <!-- Star milestone celebration (Phase 4.4) -->
+  <div id="milestoneOverlay" class="milestone-overlay hidden" aria-hidden="true">
+    <span id="milestoneText" class="milestone-text"></span>
+  </div>
+
+  <!-- Celebration emoji rain -->
+  <div id="celebrationFx" class="celebration-fx hidden" aria-hidden="true"></div>
+
+  <!-- Landscape lock prompt (Phase 6.3) -->
+  <div id="rotatePrompt" class="rotate-prompt hidden" aria-hidden="true">
+    <div class="rotate-inner">
+      <span class="rotate-icon">📱</span>
+      <p>Rotate your phone to<br><strong>landscape</strong> for the best experience!</p>
+    </div>
+  </div>
+
+  <!-- Back link (subtle, top-left) -->
+  <a href="../index.html" class="back-link">← Home</a>
 
   <script src="./game.js" defer></script>
 </body>
