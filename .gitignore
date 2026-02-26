@@ -1,1 +1,4 @@
 .DS_Store
+marathon-analysis/.strava_token.json
+marathon-analysis/*.json
+!marathon-analysis/package.json
